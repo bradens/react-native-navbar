@@ -10,13 +10,13 @@ var {
   View
 } = React;
 
-var NavigatorNavigationBarStyles = require('NavigatorNavigationBarStyles');
-var StaticContainer = require('StaticContainer.react');
-var cssVar = require('cssVar');
+var NAV_BAR_HEIGHT = 44;
+var STATUS_BAR_HEIGHT = 20;
+var NAV_HEIGHT = NAV_BAR_HEIGHT + STATUS_BAR_HEIGHT;
 
 var styles = StyleSheet.create({
   navBarContainer: {
-    height: NavigatorNavigationBarStyles.General.TotalNavHeight,
+    height: NAV_HEIGHT,
     backgroundColor: 'white',
     flexDirection: 'row',
     alignItems: 'flex-end',
@@ -39,7 +39,7 @@ var styles = StyleSheet.create({
     textAlign: 'center',
   },
   navBarTitleText: {
-    color: cssVar('fbui-bluegray-60'),
+    color: '#373e4d',
     fontWeight: '500',
     position: 'absolute',
     left: 0,
@@ -53,16 +53,24 @@ var styles = StyleSheet.create({
     paddingRight: 10,
   },
   navBarButtonText: {
-    color: cssVar('fbui-accent-blue'),
+    color: '#5890ff',
   }
 });
 
 var NavigationBar = React.createClass({
 
   propTypes: {
-    navigator: React.PropTypes.object.isRequired,
-    route: React.PropTypes.object.isRequired,
+    navigator: React.PropTypes.object,
+    route: React.PropTypes.object,
+    shouldUpdate: React.PropTypes.bool
   },
+
+  getDefaultProps: function() {
+    return {
+      shouldUpdate: false
+    }
+  },
+
   /*
    * If there are no routes in the stack, `hidePrev` isn't provided or false,
    * and we haven't received `onPrev` click handler, return true
@@ -210,25 +218,23 @@ var NavigationBar = React.createClass({
   },
 
   render: function() {
-    
+
     if (this.props.statusBar === 'lightContent') {
-      StatusBarIOS.setStyle(StatusBarIOS.Style['lightContent']);
+      StatusBarIOS.setStyle('light-content', false);
     } else if (this.props.statusBar === 'default') {
-      StatusBarIOS.setStyle(StatusBarIOS.Style['default']);
+      StatusBarIOS.setStyle('default', false);
     }
-        
+
     var backgroundStyle = this.props.backgroundColor ?
       { backgroundColor: this.props.backgroundColor } : {},
         customStyle = this.props.style;
 
     return (
-      <StaticContainer shouldUpdate={false}>
-        <View style={[styles.navBarContainer, backgroundStyle, customStyle ]}>
-          {this.getTitleElement()}
-          {this.getLeftButtonElement()}
-          {this.getRightButtonElement()}
-        </View>
-      </StaticContainer>
+      <View style={[styles.navBarContainer, backgroundStyle, customStyle ]}>
+        {this.getTitleElement()}
+        {this.getLeftButtonElement()}
+        {this.getRightButtonElement()}
+      </View>
     );
   },
 });
