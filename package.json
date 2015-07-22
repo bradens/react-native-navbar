@@ -21,6 +21,6 @@
   },
   "homepage": "https://github.com/Kureev/react-native-navbar",
   "peerDependencies": {
-    "react-native": ">= 0.7"
+    "react-native": "0.8.0-rc"
   }
 }
