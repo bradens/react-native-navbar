@@ -41,16 +41,19 @@ var styles = StyleSheet.create({
   navBarTitleText: {
     color: '#373e4d',
     fontWeight: '500',
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 15,
+    flex: 1
+    // position: 'absolute',
+    // left: 0,
+    // right: 0,
+    // bottom: 15,
   },
   navBarLeftButton: {
     paddingLeft: 10,
+    flex: 0
   },
   navBarRightButton: {
     paddingRight: 10,
+    flex: 0
   },
   navBarButtonText: {
     color: '#5890ff',
@@ -143,7 +146,7 @@ var NavigationBar = React.createClass({
       titleColor,
       customTitle,
       navigator,
-      route,
+      route
     } = this.props;
 
     /*
