@@ -41,19 +41,16 @@ var styles = StyleSheet.create({
   navBarTitleText: {
     color: '#373e4d',
     fontWeight: '500',
-    flex: 1
-    // position: 'absolute',
-    // left: 0,
-    // right: 0,
-    // bottom: 15,
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 15,
   },
   navBarLeftButton: {
     paddingLeft: 10,
-    flex: 0
   },
   navBarRightButton: {
     paddingRight: 10,
-    flex: 0
   },
   navBarButtonText: {
     color: '#5890ff',
@@ -66,6 +63,13 @@ var NavigationBar = React.createClass({
     navigator: React.PropTypes.object,
     route: React.PropTypes.object,
     shouldUpdate: React.PropTypes.bool
+  },
+
+  getInitialState() {
+    return {
+      leftWidth: 0,
+      rightWidth: 0
+    }
   },
 
   getDefaultProps: function() {
@@ -93,6 +97,27 @@ var NavigationBar = React.createClass({
     );
   },
 
+  onMeasureLeft(a, b, width) {
+    this.setState({ leftWidth: width })
+  },
+
+  onMeasureRight(a, b, width) {
+    this.setState({ rightWidth: width })
+  },
+
+  componentDidMount() {
+    let left, right, title
+
+    requestAnimationFrame(() => {
+      if ((left = this.refs.leftButton)) {
+        left.measure(this.onMeasureLeft)
+      }
+      if ((right = this.refs.rightButton)) {
+        right.measure(this.onMeasureRight)
+      }
+    })
+  },
+
   /**
    * Describes how we get a left button in the navbar
    */
@@ -107,7 +132,7 @@ var NavigationBar = React.createClass({
     } = this.props;
 
     /*
-     * If we have a `customPrev` component, then return
+     * If we have a `customPrev` component, then returnop
      * it's clone with additional attributes
      */
     if (customPrev) {
@@ -127,7 +152,7 @@ var NavigationBar = React.createClass({
     var customStyle = buttonsColor ? { color: buttonsColor } : {};
 
     return (
-      <TouchableOpacity onPress={onPrev || navigator.pop}>
+      <TouchableOpacity ref='leftButton' onPress={onPrev || navigator.pop}>
         <View style={styles.navBarLeftButton}>
           <Text style={[styles.navBarText, styles.navBarButtonText, customStyle]}>
             {prevTitle || 'Back'}
@@ -167,8 +192,9 @@ var NavigationBar = React.createClass({
     var titleStyle = [
       styles.navBarText,
       styles.navBarTitleText,
-      { color: titleColor }
-    ];
+      { color: titleColor },
+      { left: this.state.leftWidth || this.state.rightWidth, right: this.state.rightWidth || this.state.leftWidth }
+    ]
 
     return (
       <Text style={titleStyle} numberOfLines={1}>
@@ -210,7 +236,7 @@ var NavigationBar = React.createClass({
     var customStyle = buttonsColor ? { color: buttonsColor } : {};
 
     return (
-      <TouchableOpacity onPress={onNext}>
+      <TouchableOpacity ref='rightButton' onPress={onNext}>
         <View style={styles.navBarRightButton}>
           <Text style={[styles.navBarText, styles.navBarButtonText, customStyle]}>
             {nextTitle || 'Next'}
