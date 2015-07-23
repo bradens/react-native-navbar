@@ -168,7 +168,7 @@ var NavigationBar = React.createClass({
     ];
 
     return (
-      <Text style={titleStyle}>
+      <Text style={titleStyle} numberOfLines={1}>
         {title}
       </Text>
     );
