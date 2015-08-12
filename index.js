@@ -62,19 +62,14 @@ var NavigationBar = React.createClass({
   propTypes: {
     navigator: React.PropTypes.object,
     route: React.PropTypes.object,
-    shouldUpdate: React.PropTypes.bool
-  },
-
-  getInitialState() {
-    return {
-      leftWidth: 0,
-      rightWidth: 0
-    }
+    shouldUpdate: React.PropTypes.bool,
+    titleStyle: React.PropTypes.object
   },
 
   getDefaultProps: function() {
     return {
-      shouldUpdate: false
+      shouldUpdate: false,
+      titleStyle: {}
     }
   },
 
@@ -95,27 +90,6 @@ var NavigationBar = React.createClass({
       hidePrev ||
       (getCurrentRoutes && getCurrentRoutes().length <= 1 && !onPrev)
     );
-  },
-
-  onMeasureLeft(a, b, width) {
-    this.setState({ leftWidth: width })
-  },
-
-  onMeasureRight(a, b, width) {
-    this.setState({ rightWidth: width })
-  },
-
-  componentDidMount() {
-    let left, right, title
-
-    requestAnimationFrame(() => {
-      if ((left = this.refs.leftButton)) {
-        left.measure(this.onMeasureLeft)
-      }
-      if ((right = this.refs.rightButton)) {
-        right.measure(this.onMeasureRight)
-      }
-    })
   },
 
   /**
@@ -152,7 +126,7 @@ var NavigationBar = React.createClass({
     var customStyle = buttonsColor ? { color: buttonsColor } : {};
 
     return (
-      <TouchableOpacity ref='leftButton' onPress={onPrev || navigator.pop}>
+      <TouchableOpacity onPress={onPrev || navigator.pop}>
         <View style={styles.navBarLeftButton}>
           <Text style={[styles.navBarText, styles.navBarButtonText, customStyle]}>
             {prevTitle || 'Back'}
@@ -193,7 +167,7 @@ var NavigationBar = React.createClass({
       styles.navBarText,
       styles.navBarTitleText,
       { color: titleColor },
-      { left: this.state.leftWidth || this.state.rightWidth, right: this.state.rightWidth || this.state.leftWidth }
+      this.props.titleStyle
     ]
 
     return (
@@ -236,7 +210,7 @@ var NavigationBar = React.createClass({
     var customStyle = buttonsColor ? { color: buttonsColor } : {};
 
     return (
-      <TouchableOpacity ref='rightButton' onPress={onNext}>
+      <TouchableOpacity onPress={onNext}>
         <View style={styles.navBarRightButton}>
           <Text style={[styles.navBarText, styles.navBarButtonText, customStyle]}>
             {nextTitle || 'Next'}
